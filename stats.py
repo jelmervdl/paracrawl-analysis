@@ -15,9 +15,14 @@ class RandomSample:
             warnings.warn('Population (size {}) smaller than sample (size {})'.format(self.n + 1, self.size), PopulationSizeWarning)
         return iter(self._sample)
     
+    def __getitem__(self, key):
+        if self.n < self.size:
+            warnings.warn('Population (size {}) smaller than sample (size {})'.format(self.n + 1, self.size), PopulationSizeWarning)
+        return self._sample[key]
+        
     def __len__(self):
         return len(self._sample)
-        
+    
     def add(self, item):
         if self.n < self.size:
             self._sample.append(item)
