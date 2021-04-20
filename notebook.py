@@ -21,11 +21,12 @@ def isiterable(iterable):
     return hasattr(iterable, '__iter__')
 
 class table:
-    def __init__(self, data, *, headers=None):
+    def __init__(self, data, *, headers=None, title=None):
         self.data = data
         self.headers = headers
+        self.title = title
     
-    def _repr_html_val(self, val, headers=None):
+    def _repr_html_val(self, val, headers=None, title=None):
         if val is None:
             return '<em>None</em>'
         elif hasattr(val, '_repr_html_'):
@@ -55,13 +56,14 @@ class table:
                 )) for row in rows
             )
 
-            return '<table><thead>{head}</thead><tbody>{rows}</tbody></table>'.format(
+            return '<table>{caption}<thead>{head}</thead><tbody>{rows}</tbody></table>'.format(
+                caption='<caption>{}</caption>'.format(title) if title else '',
                 head='<tr>{}</tr>'.format(''.join(html_head)) if html_head else '',
                 rows='\n'.join(html_rows))
         else:
             return html.escape(repr(val))
     
     def _repr_html_(self):
-        return self._repr_html_val(self.data, headers=self.headers)
+        return self._repr_html_val(self.data, headers=self.headers, title=self.title)
             
         
